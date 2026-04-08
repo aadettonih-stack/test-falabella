@@ -12,7 +12,7 @@ steps:
     - run
     - deploy
     - procesar-ventas
-    - --image=us-central1-docker.pkg.dev/$PROJECT_ID/cloud-run/procesar-ventas
+    - --image=us-central1-docker.pkg.dev/test-falabella-ipg/cloud-run/procesar-ventas
     - --region=us-central1
     - --platform=managed
     - --allow-unauthenticated
