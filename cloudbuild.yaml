@@ -1,0 +1,18 @@
+steps:
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/test-falabella-ipg/cloud-run/procesar-ventas', '.']
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-central1-docker.pkg.dev/test-falabella-ipg/cloud-run/procesar-ventas']
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    - run
+    - deploy
+    - procesar-ventas
+    - --image=us-central1-docker.pkg.dev/$PROJECT_ID/cloud-run/procesar-ventas
+    - --region=us-central1
+    - --platform=managed
+    - --allow-unauthenticated
