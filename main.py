@@ -4,6 +4,7 @@ import csv
 import io
 from datetime import date
 import json
+import pandas as pd
 
 from google.cloud import bigquery
 
@@ -33,30 +34,34 @@ def parse_mes_es(mes_str: str) -> date:
 # Triggered from a message on a Cloud Pub/Sub topic.
 @functions_framework.cloud_event
 def hello_pubsub(cloud_event):
-    # Print out the data from Pub/Sub, to prove that it worked
-    csv_bytes= base64.b64decode(cloud_event.data["message"]["data"])
-    csv_text = csv_bytes.decode("utf-8")
 
-    # Leer CSV completo
-    reader = csv.DictReader(io.StringIO(csv_text))
-
-    rows = []
-
-    for row in reader:
-        rows.append({
-            "producto": row["producto"],
-            "region": row["region"],
-            "mes": parse_mes_es(row["mes"]).isoformat(),
-            "ventas_mensuales": int(row["ventas_mensuales"])
-        })
-    # Insertar en BigQuery
+    
+    csv_bytes = base64.b64decode(cloud_event.data["message"]["data"])
+    
+    df = pd.read_csv(
+        io.BytesIO(csv_bytes),
+        encoding="utf-8-sig"   # elimina BOM automáticamente
+    )
+    
+    # normalizar nombres columnas
+    df.columns = (
+        df.columns
+        .str.strip()
+        .str.lower()
+    )
+    
+    # convertir mes
+    df["mes"] = df["mes"].apply(lambda x: parse_mes_es(x).isoformat())
+    
+    # tipos
+    df["ventas_mensuales"] = df["ventas_mensuales"].astype(int)
+    print(df)
+    rows = df.to_dict(orient="records")
+    
     errors = bq_client.insert_rows_json(TABLE_ID, rows)
-
+    
     if errors:
-        print("BigQuery errors:", errors)
-        return ("Error", 500)
-    print (f'len{rows} filas insertadas')
-    return ("OK", 200)
+        print(errors)
 
 if __name__ == "__main__":
     port = 8080
