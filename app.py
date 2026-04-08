@@ -49,14 +49,13 @@ def hello_pubsub(cloud_event):
             "mes": parse_mes_es(row["mes"]).isoformat(),
             "ventas_mensuales": int(row["ventas_mensuales"])
         })
-    print (rows)
     # Insertar en BigQuery
     errors = bq_client.insert_rows_json(TABLE_ID, rows)
 
     if errors:
         print("BigQuery errors:", errors)
         return ("Error", 500)
-
+    print (f'len(rows) filas insertadas')
     return ("OK", 200)
 
 if __name__ == "__main__":
