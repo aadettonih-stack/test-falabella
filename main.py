@@ -2,7 +2,7 @@ import base64
 import functions_framework
 import csv
 import io
-from datetime import date
+from datetime import date, datetime, timezone
 import json
 import pandas as pd
 
@@ -10,7 +10,7 @@ from google.cloud import bigquery
 
 bq_client = bigquery.Client()
 
-TABLE_ID = "test-falabella-ipg.falabellaplatform.ventas"
+TABLE_ID = "test-falabella-ipg.falabellaplatform.ventas_2"
 def parse_mes_es(mes_str: str) -> date:
     meses = {
         "enero": 1,
@@ -55,7 +55,7 @@ def hello_pubsub(cloud_event):
     
     # tipos
     df["ventas_mensuales"] = df["ventas_mensuales"].astype(int)
-    print(df)
+    df["execution_ts"] = pd.Timestamp.now(tz="America/Santiago")
     rows = df.to_dict(orient="records")
     
     errors = bq_client.insert_rows_json(TABLE_ID, rows)
