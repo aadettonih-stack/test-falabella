@@ -55,7 +55,7 @@ def hello_pubsub(cloud_event):
     if errors:
         print("BigQuery errors:", errors)
         return ("Error", 500)
-    print (f'len(rows) filas insertadas')
+    print (f'len{rows} filas insertadas')
     return ("OK", 200)
 
 if __name__ == "__main__":
