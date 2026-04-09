@@ -63,9 +63,6 @@ def hello_pubsub(cloud_event):
     df["ventas_mensuales"] = df["ventas_mensuales"].astype(int)
     df["fecha_ejecucion"] = pd.Timestamp.now(tz="America/Santiago")
     bq_client.load_table_from_dataframe(df, TABLE_ID).result()
-    
-    if errors:
-        print(errors)
 
 if __name__ == "__main__":
     port = 8080
