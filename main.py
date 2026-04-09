@@ -61,7 +61,7 @@ def hello_pubsub(cloud_event):
     
     # tipos
     df["ventas_mensuales"] = df["ventas_mensuales"].astype(int)
-    df["execution_ts"] = pd.Timestamp.now(tz="America/Santiago")
+    df["fecha_ejecucion"] = pd.Timestamp.now(tz="America/Santiago")
     bq_client.load_table_from_dataframe(df, TABLE_ID).result()
     
     if errors:
