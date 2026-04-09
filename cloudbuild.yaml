@@ -16,5 +16,7 @@ steps:
     - --region=us-central1
     - --platform=managed
     - --allow-unauthenticated
+    - --set-env-vars=PROJECT_ID=test-falabella-ipg,DATASET=falabellaplatform,TABLE=ventas_2
+
 options:
   logging: CLOUD_LOGGING_ONLY
