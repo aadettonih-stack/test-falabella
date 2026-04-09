@@ -9,4 +9,4 @@ COPY . .
 
 ENV PORT=8080
 
-CMD ["functions-framework", "--target=main", "--source=src.main.py", "--signature-type=cloudevent", "--port=8080"]
+CMD ["functions-framework", "--target=main", "--source=src/main.py", "--signature-type=cloudevent", "--port=8080"]
