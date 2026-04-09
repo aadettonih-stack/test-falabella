@@ -7,7 +7,7 @@ from parser import parse_mes_es
 from bq_loader import load_dataframe
 
 @functions_framework.cloud_event
-def hello_pubsub(cloud_event):
+def main(cloud_event):
 
     csv_bytes = base64.b64decode(
         cloud_event.data["message"]["data"]
