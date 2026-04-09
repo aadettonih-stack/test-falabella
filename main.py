@@ -39,18 +39,22 @@ def hello_pubsub(cloud_event):
 
     
     csv_bytes = base64.b64decode(cloud_event.data["message"]["data"])
+    print ('----------------')
+    print (csv_bytes)
     
     df = pd.read_csv(
         io.BytesIO(csv_bytes),
         encoding="utf-8-sig"   # elimina BOM automáticamente
     )
-    
+    print(df)
+    print ('---------------')
     # normalizar nombres columnas
     df.columns = (
         df.columns
         .str.strip()
         .str.lower()
     )
+    
     
     # convertir mes
     df["mes"] = df["mes"].apply(lambda x: parse_mes_es(x).isoformat())
